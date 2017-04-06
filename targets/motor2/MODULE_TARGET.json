@@ -1,0 +1,10 @@
+{
+  "name": "motor2",
+  "description": "motor2",
+  "module": "udc",
+  "required_packages": [ "pid_ie" ],
+  "sources": [
+    "main.cpp"
+  ],
+  "includes": []
+}

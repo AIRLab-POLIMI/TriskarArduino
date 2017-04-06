@@ -1,0 +1,14 @@
+{
+  "name": "usb",
+  "description": "usb",
+  "module": "usb",
+  "required_packages": [ "triskar_kinematics", "triskar_msgs",
+  "actuator_msgs", "sensor_msgs"],
+  "sources": [
+    "main.cpp", 
+    "rosserial.cpp",
+    "ros_lib/duration.cpp",
+    "ros_lib/time.cpp"
+  ],
+  "includes": ["ros_lib"]
+}
