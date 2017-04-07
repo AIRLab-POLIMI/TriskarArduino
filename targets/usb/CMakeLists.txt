@@ -14,6 +14,7 @@ SET( PROJECT_INCLUDE_DIRECTORIES
 
 SET( PROJECT_SOURCES
   main.cpp
+  SerialConsole.cpp
   rosserial.cpp
   ros_lib/duration.cpp
   ros_lib/time.cpp

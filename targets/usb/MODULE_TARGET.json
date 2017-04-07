@@ -6,6 +6,7 @@
   "actuator_msgs", "sensor_msgs"],
   "sources": [
     "main.cpp", 
+    "SerialConsole.cpp",
     "rosserial.cpp",
     "ros_lib/duration.cpp",
     "ros_lib/time.cpp"
