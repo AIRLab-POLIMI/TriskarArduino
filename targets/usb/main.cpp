@@ -11,6 +11,7 @@
 #include <core/triskar_kinematics/Inverse.hpp>
 
 #include "rosserial.hpp"
+#include "SerialConsole.hpp"
 
 // --- BOARD IMPL -------------------------------------------------------------
 
@@ -25,6 +26,7 @@ core::led::Publisher  led_publisher("led_publisher");
 core::triskar_kinematics::Forward forward("forward", core::os::Thread::PriorityEnum::NORMAL);
 core::triskar_kinematics::Inverse inverse("inverse", core::os::Thread::PriorityEnum::NORMAL);
 rosserial::RosSerialPublisher ros_node("ros", core::os::Thread::PriorityEnum::NORMAL);
+serialconsole::SerialConsole serial_node("serial", core::os::Thread::PriorityEnum::NORMAL);
 
 /*
  * Application entry point.
@@ -74,6 +76,7 @@ extern "C" {
       module.add(forward);
       module.add(inverse);
       module.add(ros_node);
+      //module.add(serial_node);
 
       // ... and let's play!
       module.setup();

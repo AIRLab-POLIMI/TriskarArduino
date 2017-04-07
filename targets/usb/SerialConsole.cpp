@@ -5,6 +5,10 @@
 
 #include <Module.hpp>
 
+static const char* setpointName = "cmd_vel";
+static const char* twist_name = "vel";
+static const char* enc_name = "enc";
+static const char* proximity_name = "proximity";
 
 namespace serialconsole {
 
@@ -29,6 +33,7 @@ SerialConsole::SerialConsole(const char* name,
 	_workingAreaSize = 1024;
 	twist = false;
 	proximity = false;
+	setpoint = false;
 
 	for(unsigned int i = 0; i < 3; i++)
 		encoder[i] = false;
@@ -98,16 +103,11 @@ bool SerialConsole::encoderCallback_2(const core::sensor_msgs::Delta_f32& msg,
 
 void SerialConsole::setpointCallback(float vx, float vy, float wz)
 {
-	core::triskar_msgs::Velocity* msgp;
+	v_x = vx;
+	v_y = vy;
+	w_z = wz;
 
-	if (_cmd_publisher.alloc(msgp))
-	{
-		msgp->linear[0] = vx;
-		msgp->linear[1] = vy;
-		msgp->angular = wz;
-
-		_cmd_publisher.publish(*msgp);
-	}
+	setpoint = true;
 }
 
 bool SerialConsole::onPrepareMW()
@@ -127,9 +127,9 @@ bool SerialConsole::onPrepareMW()
 	subscribe(_subscriberEncoder[1], "encoder_1");
 
 	_subscriberEncoder[2].set_callback(encoderCallback_2);
-	subscribe(_subscriberEncoder[2], "encoder_2");
+	subscribe(_subscriberEncoder[2], "encoder_2");*/
 
-	advertise(_cmd_publisher, setpointName);*/
+	advertise(_cmd_publisher, setpointName);
 
 	return true;
 }
@@ -137,20 +137,6 @@ bool SerialConsole::onPrepareMW()
 
 bool SerialConsole::onStart()
 {
-	/*
-	 * Initializes a serial-over-USB CDC driver.
-	 */
-	sduObjectInit(&SDU1);
-	sduStart(&SDU1, &serusbcfg);
-
-	/*
-	 * Activates the USB driver and then the USB bus pull-up on D+.
-	 * Note, a delay is inserted in order to not have to disconnect the cable
-	 * after a reset.
-	 */
-	usbStart(serusbcfg.usbp, &usbcfg);
-
-
 	_stamp = core::os::Time::now();
 
 	return true;
@@ -159,6 +145,23 @@ bool SerialConsole::onStart()
 bool SerialConsole::onLoop()
 {
 	core::os::Thread::sleep_until(_stamp + core::os::Time::hz(100));
+
+	if(setpoint)
+	{
+		core::triskar_msgs::Velocity* msgp;
+
+		if (_cmd_publisher.alloc(msgp))
+		{
+			msgp->linear[0] = v_x;
+			msgp->linear[1] = v_y;
+			msgp->angular = w_z;
+
+			_cmd_publisher.publish(*msgp);
+		}
+
+		//setpoint = false;
+	}
+
 
 	if(this->spin(core::os::Time::ms(1)))
 	{
@@ -182,6 +185,8 @@ bool SerialConsole::onLoop()
 				encoder[i] = false;
 		}
 	}
+
+	//chprintf((BaseSequentialStream*)&SDU1, "ciao\r\n");
 
 	if (!usb_shelltp && (SDU1.config->usbp->state == USB_ACTIVE))
 		usb_shelltp = shellCreate(&usb_shell_cfg, 4096, NORMALPRIO - 1);

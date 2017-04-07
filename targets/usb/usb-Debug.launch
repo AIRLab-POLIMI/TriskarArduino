@@ -17,7 +17,7 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value="/home/dave/TriskarPixy/build/debug/usb/firmware"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value="/home/dave/TriskarArduino/build/debug/usb/firmware"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsOffset" value=""/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForImage" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForSymbols" value="true"/>

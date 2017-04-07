@@ -77,9 +77,12 @@ private:
 
 	core::mw::Publisher<core::triskar_msgs::Velocity> _cmd_publisher;
 
+	bool setpoint;
 	bool twist;
 	bool proximity;
 	bool encoder[3];
+
+	float v_x, v_y, w_z;
 
 	//Shell
 	thread_t* usb_shelltp;

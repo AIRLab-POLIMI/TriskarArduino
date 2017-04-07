@@ -2,10 +2,10 @@
 
 ros::NodeHandle nh;
 
-const char* setpointName = "cmd_vel";
-const char* twist_name = "vel";
-const char* enc_name = "enc";
-const char* proximity_name = "proximity";
+static const char* setpointName = "cmd_vel";
+static const char* twist_name = "vel";
+static const char* enc_name = "enc";
+static const char* proximity_name = "proximity";
 
 const float encoderFrequency = 100;
 
