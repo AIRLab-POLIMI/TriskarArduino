@@ -10,6 +10,8 @@ static const char* twist_name = "vel";
 static const char* enc_name = "enc";
 static const char* proximity_name = "proximity";
 
+#define PORT SD3
+
 namespace serialconsole {
 
 std::function<void(float, float, float)> SerialConsole::consoleCallbackRun;
@@ -22,7 +24,7 @@ const ShellCommand SerialConsole::commands[] =
 		{ NULL, NULL }
 };
 
-const ShellConfig SerialConsole::usb_shell_cfg = { (BaseSequentialStream *) &SDU1, commands };
+const ShellConfig SerialConsole::usb_shell_cfg = { (BaseSequentialStream *) &PORT, commands };
 
 SerialConsole::SerialConsole(const char* name,
 		core::os::Thread::Priority priority) :
@@ -37,8 +39,11 @@ SerialConsole::SerialConsole(const char* name,
 
 	for(unsigned int i = 0; i < 3; i++)
 		encoder[i] = false;
-}
 
+	v_x = 0;
+    v_y = 0;
+    w_z = 0;
+}
 
 void SerialConsole::cmd_run(BaseSequentialStream *chp, int argc, char *argv[])
 {
@@ -159,7 +164,7 @@ bool SerialConsole::onLoop()
 			_cmd_publisher.publish(*msgp);
 		}
 
-		//setpoint = false;
+		setpoint = false;
 	}
 
 
@@ -167,28 +172,28 @@ bool SerialConsole::onLoop()
 	{
 		if(twist)
 		{
-			//chprintf(SDU1, "TWIST: %f, %f, %f\n", );
+			//chprintf(PORT, "TWIST: %f, %f, %f\n", );
 			twist = false;
 		}
 
 		if(proximity)
 		{
-			//chprintf(SDU1, "PROX: %f, %f, %f, %f, %f, %f, %f, %f\n", );
+			//chprintf(PORT, "PROX: %f, %f, %f, %f, %f, %f, %f, %f\n", );
 			proximity = false;
 		}
 
 		if(encoder[0] && encoder[1] && encoder[2])
 		{
-			//chprintf(SDU1, "ENC: %f, %f, %f\n", );
+			//chprintf(PORT, "ENC: %f, %f, %f\n", );
 
 			for(unsigned int i = 0; i < 3; i++)
 				encoder[i] = false;
 		}
 	}
 
-	//chprintf((BaseSequentialStream*)&SDU1, "ciao\r\n");
+	//chprintf((BaseSequentialStream*)&PORT, "ciao\r\n");
 
-	if (!usb_shelltp && (SDU1.config->usbp->state == USB_ACTIVE))
+	if (!usb_shelltp)
 		usb_shelltp = shellCreate(&usb_shell_cfg, 4096, NORMALPRIO - 1);
 	else if (chThdTerminatedX(usb_shelltp)) {
 		chThdRelease(usb_shelltp); /* Recovers memory of the previous shell.   */

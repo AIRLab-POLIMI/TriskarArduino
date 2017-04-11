@@ -35,7 +35,7 @@ extern "C" {
    int main( void )
    {
 	  const float wheelRadius = 0.035f;
-	  const float centerDistance = 0.100f;
+	  const float centerDistance = 0.155f;
 
       module.initialize();
 
@@ -75,8 +75,8 @@ extern "C" {
       module.add(led_publisher);
       module.add(forward);
       module.add(inverse);
-      module.add(ros_node);
-      //module.add(serial_node);
+      //module.add(ros_node);
+      module.add(serial_node);
 
       // ... and let's play!
       module.setup();
