@@ -3,11 +3,16 @@
 ## TARGET MODULE udc
 
 PROJECT( motor2 )
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
 FIND_PACKAGE( CORE_BUILD CONFIG REQUIRED )
 
 INCLUDE ( CoreTarget NO_POLICY_SCOPE )
+
+SET( BOOTLOADER_SIZE 0 )
+SET( CONFIGURATION_SIZE 0 )
+SET( TAGS_SIZE 0 )
+
 SET( PROJECT_INCLUDE_DIRECTORIES
 )
 
@@ -17,7 +22,16 @@ SET( PROJECT_SOURCES
 
 core_target_module(
   MODULE udc
-  OS_VERSION CHIBIOS_3
+  OS_VERSION CHIBIOS_16
   PACKAGES
+    MC33926_driver
+    QEI_driver
+    common_msgs
+    led
+    actuator_msgs
+    actuator_subscriber
+    basic_sensors
+    sensor_msgs
+    sensor_publisher
     pid_ie
 )

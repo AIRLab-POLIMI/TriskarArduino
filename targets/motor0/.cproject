@@ -4,7 +4,7 @@
 		<cconfiguration id="cdt.managedbuild.toolchain.gnu.cross.base.1865719816">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.cross.base.1865719816" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="NOVA_CORE_ROOT" type="VALUE_PATH_DIR" value="/opt/core"/>
+					<stringMacro name="NOVA_CORE_ROOT" type="VALUE_PATH_DIR" value="/opt/nova/core"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -53,7 +53,7 @@
 		<cconfiguration id="cdt.managedbuild.toolchain.gnu.cross.base.1865719816.839626430">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.cross.base.1865719816.839626430" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<macros>
-					<stringMacro name="NOVA_CORE_ROOT" type="VALUE_PATH_DIR" value="/opt/core"/>
+					<stringMacro name="NOVA_CORE_ROOT" type="VALUE_PATH_DIR" value="/opt/nova/core"/>
 				</macros>
 				<externalSettings/>
 				<extensions>

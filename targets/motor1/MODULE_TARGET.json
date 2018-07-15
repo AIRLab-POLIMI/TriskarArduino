@@ -2,9 +2,24 @@
   "name": "motor1",
   "description": "motor1",
   "module": "udc",
-  "required_packages": [ "pid_ie" ],
+  "os_version": "CHIBIOS_16",
+  "required_os_components": [],
+  "required_packages": [
+    "MC33926_driver",
+    "QEI_driver",
+    "common_msgs",
+    "led",
+    "actuator_msgs",
+    "actuator_subscriber",
+    "basic_sensors",
+    "sensor_msgs",
+    "sensor_publisher",
+    "pid_ie"
+  ],
   "sources": [
     "main.cpp"
   ],
-  "includes": []
+  "includes": [],
+  "bootloader_size": 0,
+  "configuration_size": 0
 }

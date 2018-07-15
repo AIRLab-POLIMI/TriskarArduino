@@ -2,14 +2,16 @@
   "name": "usb",
   "description": "usb",
   "module": "usb",
-  "required_packages": [ "triskar_kinematics", "triskar_msgs",
-  "actuator_msgs", "sensor_msgs"],
-  "sources": [
-    "main.cpp", 
-    "SerialConsole.cpp",
-    "rosserial.cpp",
-    "ros_lib/duration.cpp",
-    "ros_lib/time.cpp"
+  "os_version": "CHIBIOS_16",
+  "required_os_components": [],
+  "required_packages": [
+    "common_msgs",
+    "led"
   ],
-  "includes": ["ros_lib"]
+  "sources": [
+    "main.cpp"
+  ],
+  "includes": [],
+  "bootloader_size": 0,
+  "configuration_size": 0
 }

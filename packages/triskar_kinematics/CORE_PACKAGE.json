@@ -1,9 +1,0 @@
-{
-  "name": "triskar_kinematics",
-  "description": "Triskar (3-wheeled omnidirectional robot) kinematics package",
-  "provider": "core",
-  "sources": [
-    "Forward.cpp",
-    "Inverse.cpp"
-   ]
-}

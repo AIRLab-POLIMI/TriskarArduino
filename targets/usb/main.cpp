@@ -1,96 +1,85 @@
+/* COPYRIGHT (c) 2016-2018 Nova Labs SRL
+ *
+ * All rights reserved. All use of this software and documentation is
+ * subject to the License Agreement located in the file LICENSE.
+ */
+ 
+/* USB Module template file
+ *
+ */
+
 #include <ModuleConfiguration.hpp>
 #include <Module.hpp>
+
+// --- BOARD IMPL -------------------------------------------------------------
+
+// --- MODULE -----------------------------------------------------------------
+Module module;
+
+// *** DO NOT MOVE THE CODE ABOVE THIS COMMENT *** //
 
 // --- MESSAGES ---------------------------------------------------------------
 #include <core/common_msgs/Led.hpp>
 
 // --- NODES ------------------------------------------------------------------
-#include <core/led/Subscriber.hpp>
 #include <core/led/Publisher.hpp>
-#include <core/triskar_kinematics/Forward.hpp>
-#include <core/triskar_kinematics/Inverse.hpp>
+#include <core/led/Subscriber.hpp>
 
-#include "rosserial.hpp"
-#include "SerialConsole.hpp"
+// --- TYPES ------------------------------------------------------------------
 
-// --- BOARD IMPL -------------------------------------------------------------
-
-// --- MISC -------------------------------------------------------------------
-
-// *** DO NOT MOVE ***
-Module module;
+// --- CONFIGURATIONS ---------------------------------------------------------
+core::led::PublisherConfiguration  led_publisher_configuration_default;
+core::led::SubscriberConfiguration led_subscriber_configuration_default;
 
 // --- NODES ------------------------------------------------------------------
-core::led::Subscriber led_subscriber("led_subscriber", core::os::Thread::PriorityEnum::LOWEST);
-core::led::Publisher  led_publisher("led_publisher");
-core::triskar_kinematics::Forward forward("forward", core::os::Thread::PriorityEnum::NORMAL);
-core::triskar_kinematics::Inverse inverse("inverse", core::os::Thread::PriorityEnum::NORMAL);
-rosserial::RosSerialPublisher ros_node("ros", core::os::Thread::PriorityEnum::NORMAL);
-serialconsole::SerialConsole serial_node("serial", core::os::Thread::PriorityEnum::NORMAL);
+core::led::Publisher  led_publisher("led_pub", core::os::Thread::PriorityEnum::LOWEST);
+core::led::Subscriber led_subscriber("led_sub", core::os::Thread::PriorityEnum::LOWEST);
 
-/*
- * Application entry point.
- */
+// --- DEVICE CONFIGURATION ---------------------------------------------------
+
+// --- MAIN -------------------------------------------------------------------
 extern "C" {
-   int main( void )
-   {
-	  const float wheelRadius = 0.035f;
-	  const float centerDistance = 0.16f;
+    int
+    main(
+        void
+    )
+    {
+        module.initialize();
 
-      module.initialize();
+        // Device configurations
 
-      // Led publisher node
-      core::led::PublisherConfiguration led_publisher_configuration;
-      led_publisher_configuration.topic = "led";
-      led_publisher_configuration.led   = 1;
-      led_publisher.setConfiguration(led_publisher_configuration);
+        // Default configuration
+        led_publisher_configuration_default.topic  = "led";
+        led_publisher_configuration_default.led    = 1;
+        led_subscriber_configuration_default.topic = "led";
 
-      // Led subscriber node
-      core::led::SubscriberConfiguration led_subscriber_configuration;
-      led_subscriber_configuration.topic = "led";
-      led_subscriber.setConfiguration(led_subscriber_configuration);
+        // Add configurable objects to the configuration manager...
+        module.configurations().add(led_publisher, led_publisher_configuration_default);
+        module.configurations().add(led_subscriber, led_subscriber_configuration_default);
 
-      //Forward kinematics configuration
-      core::triskar_kinematics::ForwardConfiguration forward_conf;
-      forward_conf.input_0 = "encoder_0";
-      forward_conf.input_1 = "encoder_1";
-      forward_conf.input_2 = "encoder_2";
-      forward_conf.output = "vel";
-      forward_conf.wheel_radius = wheelRadius;
-      forward_conf.center_distance = centerDistance;
-      forward.setConfiguration(forward_conf);
+        // ... and load the configuration
+        module.configurations().loadFrom(module.configurationStorage());
 
-      //Inverse kinematics configuration
-      core::triskar_kinematics::InverseConfiguration inverse_conf;
-      inverse_conf.output_0 = "speed_0";
-      inverse_conf.output_1 = "speed_1";
-      inverse_conf.output_2 = "speed_2";
-      inverse_conf.velocity_input = "cmd_vel";
-      inverse_conf.wheel_radius = wheelRadius;
-      inverse_conf.center_distance = centerDistance;
-      inverse.setConfiguration(inverse_conf);
+        // Add nodes to the node manager...
+        module.nodes().add(led_publisher);
+        module.nodes().add(led_subscriber);
 
-      // Add nodes to the node manager (== board)...
-      module.add(led_subscriber);
-      module.add(led_publisher);
-      module.add(forward);
-      module.add(inverse);
-      //module.add(ros_node);
-      module.add(serial_node);
+        // ... and let's play!
+        module.nodes().setup();
+        module.nodes().run();
 
-      // ... and let's play!
-      module.setup();
-      module.run();
+        // Is everything going well?
+        for (;;) {
+            if (!module.nodes().areOk()) {
+                module.halt("This must not happen!");
+            }
 
-      // Is everything going well?
-      for (;;) {
-         if (!module.isOk()) {
-            module.halt("This must not happen!");
-         }
+            core::os::Thread::sleep(core::os::Time::ms(500));
 
-         core::os::Thread::sleep(core::os::Time::ms(500));
-      }
+            // Remember to feed the (watch)dog!
+            module.keepAlive();
+        }
 
-      return core::os::Thread::OK;
-   } // main
+        return core::os::Thread::OK;
+    } // main
 }

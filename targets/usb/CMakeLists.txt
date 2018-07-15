@@ -3,29 +3,27 @@
 ## TARGET MODULE usb
 
 PROJECT( usb )
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
 FIND_PACKAGE( CORE_BUILD CONFIG REQUIRED )
 
 INCLUDE ( CoreTarget NO_POLICY_SCOPE )
+
+SET( BOOTLOADER_SIZE 0 )
+SET( CONFIGURATION_SIZE 0 )
+SET( TAGS_SIZE 0 )
+
 SET( PROJECT_INCLUDE_DIRECTORIES
-  ros_lib
 )
 
 SET( PROJECT_SOURCES
   main.cpp
-  SerialConsole.cpp
-  rosserial.cpp
-  ros_lib/duration.cpp
-  ros_lib/time.cpp
 )
 
 core_target_module(
   MODULE usb
-  OS_VERSION CHIBIOS_3
+  OS_VERSION CHIBIOS_16
   PACKAGES
-    triskar_kinematics
-    triskar_msgs
-    actuator_msgs
-    sensor_msgs
+    common_msgs
+    led
 )
