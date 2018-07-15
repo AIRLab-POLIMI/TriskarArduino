@@ -1,0 +1,13 @@
+{
+  "name": "Speeds",
+  "description": "Speed",
+  "namespace": "@",
+  "fields": [
+    {
+      "name": "speed",
+      "description": "The wheel speeds",
+      "type": "FLOAT32",
+      "size": 3
+    }
+  ]
+}

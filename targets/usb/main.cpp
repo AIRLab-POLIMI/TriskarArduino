@@ -24,16 +24,25 @@ Module module;
 // --- NODES ------------------------------------------------------------------
 #include <core/led/Publisher.hpp>
 #include <core/led/Subscriber.hpp>
+#include <core/triskar_kinematics/Forward.hpp>
+#include <core/triskar_kinematics/Inverse.hpp>
+
+#include "SerialConsole.hpp"
 
 // --- TYPES ------------------------------------------------------------------
 
 // --- CONFIGURATIONS ---------------------------------------------------------
 core::led::PublisherConfiguration  led_publisher_configuration_default;
 core::led::SubscriberConfiguration led_subscriber_configuration_default;
+core::triskar_kinematics::InverseConfiguration inverse_conf_default;
+core::triskar_kinematics::Forward forward("forward", core::os::Thread::PriorityEnum::NORMAL);
+core::triskar_kinematics::Inverse inverse("inverse", core::os::Thread::PriorityEnum::NORMAL);
+core::triskar_kinematics::ForwardConfiguration forward_conf_default;
 
 // --- NODES ------------------------------------------------------------------
 core::led::Publisher  led_publisher("led_pub", core::os::Thread::PriorityEnum::LOWEST);
 core::led::Subscriber led_subscriber("led_sub", core::os::Thread::PriorityEnum::LOWEST);
+serialconsole::SerialConsole serial_node("serial", core::os::Thread::PriorityEnum::NORMAL);
 
 // --- DEVICE CONFIGURATION ---------------------------------------------------
 
@@ -44,6 +53,9 @@ extern "C" {
         void
     )
     {
+    	const float wheelRadius = 0.035f;
+    	const float centerDistance = 0.16f;
+
         module.initialize();
 
         // Device configurations
@@ -53,9 +65,28 @@ extern "C" {
         led_publisher_configuration_default.led    = 1;
         led_subscriber_configuration_default.topic = "led";
 
+        //Forward kinematics configuration
+        forward_conf_default.input_0 = "encoder_0";
+        forward_conf_default.input_1 = "encoder_1";
+        forward_conf_default.input_2 = "encoder_2";
+        forward_conf_default.output = "vel";
+        forward_conf_default.wheel_radius = wheelRadius;
+        forward_conf_default.center_distance = centerDistance;
+
+        //Inverse kinematics configuration
+        inverse_conf_default.output_0 = "speed_0";
+        inverse_conf_default.output_1 = "speed_1";
+        inverse_conf_default.output_2 = "speed_2";
+        inverse_conf_default.velocity_input = "cmd_vel";
+        inverse_conf_default.wheel_radius = wheelRadius;
+        inverse_conf_default.center_distance = centerDistance;
+
         // Add configurable objects to the configuration manager...
         module.configurations().add(led_publisher, led_publisher_configuration_default);
         module.configurations().add(led_subscriber, led_subscriber_configuration_default);
+        module.configurations().add(forward, forward_conf_default);
+        module.configurations().add(inverse, inverse_conf_default);
+
 
         // ... and load the configuration
         module.configurations().loadFrom(module.configurationStorage());
@@ -63,6 +94,9 @@ extern "C" {
         // Add nodes to the node manager...
         module.nodes().add(led_publisher);
         module.nodes().add(led_subscriber);
+        module.nodes().add(forward);
+		module.nodes().add(inverse);
+		module.nodes().add(serial_node);
 
         // ... and let's play!
         module.nodes().setup();

@@ -6,10 +6,15 @@
   "required_os_components": [],
   "required_packages": [
     "common_msgs",
-    "led"
+    "led",
+    "sensor_msgs",
+    "actuator_msgs",
+    "triskar_msgs",
+    "triskar_kinematics"
   ],
   "sources": [
-    "main.cpp"
+    "main.cpp",
+    "SerialConsole.cpp"
   ],
   "includes": [],
   "bootloader_size": 0,

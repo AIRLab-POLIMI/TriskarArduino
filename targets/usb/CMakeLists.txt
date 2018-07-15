@@ -18,6 +18,7 @@ SET( PROJECT_INCLUDE_DIRECTORIES
 
 SET( PROJECT_SOURCES
   main.cpp
+  SerialConsole.cpp
 )
 
 core_target_module(
@@ -26,4 +27,8 @@ core_target_module(
   PACKAGES
     common_msgs
     led
+    sensor_msgs
+    actuator_msgs
+    triskar_msgs
+    triskar_kinematics
 )

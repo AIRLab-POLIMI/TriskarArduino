@@ -1,0 +1,20 @@
+{
+  "name": "Velocity",
+  "description": "A velocity setpoint",
+  "namespace": "@",
+  "fields": [
+    {
+      "name": "linear",
+      "description": "The linear velocity",
+      "type": "FLOAT32",
+      "size": 2
+    },
+    {
+      "name": "angular",
+      "description": "The angular velocity",
+      "type": "FLOAT32",
+      "size": 1
+    }
+
+  ]
+}
