@@ -35,7 +35,7 @@ qei(
 );
 
 
-core::QEI_driver::QEI_Position encoder("qei", qei);
+core::QEI_driver::QEI_Delta encoder("qei", qei);
 core::MC33926_driver::MC33926
 mc33926(
     Module::hbridge_in1,
@@ -49,14 +49,14 @@ core::MC33926_driver::MC33926_SignMagnitude hbridge("hbridge", mc33926);
 core::basic_sensors::TimeAverage average_current("avg_i");
 
 // --- TYPES ------------------------------------------------------------------
-using QEI_Publisher  = core::sensor_publisher::Publisher_<core::QEI_driver::QEI_Position>;
+using QEI_Publisher  = core::sensor_publisher::Publisher_<core::QEI_driver::QEI_Delta>;
 using I_Publisher    = core::sensor_publisher::Publisher_<core::basic_sensors::TimeAverage>;
 using SpeedPID       = core::actuator_subscriber::Speed_<core::MC33926_driver::MC33926_SignMagnitude,
-		                                                 core::QEI_driver::QEI_Position>;
+		                                                 core::QEI_driver::QEI_Delta>;
 
 // --- CONFIGURATIONS ---------------------------------------------------------
 core::led::SubscriberConfiguration led_subscriber_configuration_default;
-core::QEI_driver::QEI_PositionConfiguration   encoder_configuration_default;
+core::QEI_driver::QEI_DeltaConfiguration   encoder_configuration_default;
 core::basic_sensors::TimeAverageConfiguration average_current_configuration_default;
 QEI_Publisher::ConfigurationType  encoder_publisher_configuration_default;
 I_Publisher::ConfigurationType    i_publisher_configuration_default;
@@ -146,9 +146,9 @@ extern "C" {
         core::hw::PWM_1::driver->tim->CR1 |= STM32_TIM_CR1_CEN; // Enable the counter
 
         // Default configuration
-        encoder_configuration_default.period = 100;
+        encoder_configuration_default.period = period;
         encoder_configuration_default.ticks  = 64*30;
-        encoder_configuration_default.invert = 0;
+        encoder_configuration_default.invert = 1;
         average_current_configuration_default.period  = 100;
         led_subscriber_configuration_default.topic    = "led";
         encoder_publisher_configuration_default.topic = "encoder_1";

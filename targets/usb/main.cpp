@@ -96,7 +96,7 @@ extern "C" {
         module.nodes().add(led_subscriber);
         module.nodes().add(forward);
 		module.nodes().add(inverse);
-		module.nodes().add(serial_node);
+        module.nodes().add(serial_node);
 
         // ... and let's play!
         module.nodes().setup();
