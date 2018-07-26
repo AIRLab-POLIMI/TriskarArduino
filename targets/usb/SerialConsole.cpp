@@ -10,8 +10,6 @@ static const char* twist_name = "vel";
 static const char* enc_name = "enc";
 static const char* proximity_name = "proximity";
 
-#define PORT SD3
-
 namespace serialconsole {
 
 std::function<void(float, float, float)> SerialConsole::consoleCallbackRun;
@@ -24,13 +22,17 @@ const ShellCommand SerialConsole::commands[] =
 		{ NULL, NULL }
 };
 
-const ShellConfig SerialConsole::usb_shell_cfg = { (BaseSequentialStream *) &PORT, commands };
+ShellConfig SerialConsole::usb_shell_cfg = { nullptr, commands };
 
 SerialConsole::SerialConsole(const char* name,
+		core::os::IOChannel& serial,
 		core::os::Thread::Priority priority) :
+		serial(serial),
 		CoreNode::CoreNode(name, priority)
 {
 	usb_shelltp = nullptr;
+
+	usb_shell_cfg.sc_channel = (BaseSequentialStream *)serial.rawChannel();
 
 	_workingAreaSize = 1024;
 	//twist = false;
@@ -191,7 +193,6 @@ bool SerialConsole::onLoop()
 		}*/
 	}
 
-	//chprintf((BaseSequentialStream*)&PORT, "ciao\r\n");
 
 	if (!usb_shelltp)
 		usb_shelltp = shellCreate(&usb_shell_cfg, 4096, NORMALPRIO - 1);

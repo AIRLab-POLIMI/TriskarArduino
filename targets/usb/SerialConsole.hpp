@@ -14,14 +14,16 @@
 
 #include "ch.h"
 #include "hal.h"
-//#include <usbcfg.h>
 
 #include "shell.h"
+
+#include <core/os/IOChannel.hpp>
 
 namespace serialconsole {
 class SerialConsole: public core::mw::CoreNode {
 public:
 	SerialConsole(const char* name,
+			 core::os::IOChannel& serial,
 	         core::os::Thread::Priority priority = core::os::Thread::PriorityEnum::NORMAL);
 
 public:
@@ -87,7 +89,8 @@ private:
 	//Shell
 	thread_t* usb_shelltp;
 	static const ShellCommand commands[];
-	static const ShellConfig usb_shell_cfg;
+	static ShellConfig usb_shell_cfg;
+	core::os::IOChannel& serial;
 
 	static std::function<void(float, float, float)> consoleCallbackRun;
 

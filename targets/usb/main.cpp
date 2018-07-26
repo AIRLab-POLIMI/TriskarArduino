@@ -42,7 +42,7 @@ core::triskar_kinematics::ForwardConfiguration forward_conf_default;
 // --- NODES ------------------------------------------------------------------
 core::led::Publisher  led_publisher("led_pub", core::os::Thread::PriorityEnum::LOWEST);
 core::led::Subscriber led_subscriber("led_sub", core::os::Thread::PriorityEnum::LOWEST);
-serialconsole::SerialConsole serial_node("serial", core::os::Thread::PriorityEnum::NORMAL);
+serialconsole::SerialConsole serial_node("serial", Module::serial, core::os::Thread::PriorityEnum::NORMAL);
 
 // --- DEVICE CONFIGURATION ---------------------------------------------------
 
